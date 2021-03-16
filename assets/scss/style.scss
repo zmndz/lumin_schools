@@ -22,40 +22,45 @@
 	font-style: normal;
 }
 // @import '~vue-pdf-reader/vue-pdf-reader.css';
+@import 'partials/variables';
+@import 'partials/buttons';
+@import 'partials/box';
+@import 'partials/form';
 
 body {
   font-family: 'vazir';
+  text-align: right;
 }
 
-  input {
-    border: 1px solid #c3c3c3;
-    padding: 0 16px;
-    border-radius: 0.25rem;
-    height: 40px;
-    width: 100%;
+input {
+  border: 1px solid #c3c3c3;
+  padding: 0 16px;
+  border-radius: 0.25rem;
+  height: 40px;
+  width: 100%;
 
-    &:hover {
-      border-color: #999999;
-    }
-    
-    &:focus {
-      outline: none;
-      border: 2px solid #fbdc8c;
-    }
-
-    &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-      color: #bfbfbf;
-    }
-    &::-moz-placeholder { /* Firefox 19+ */
-      color: #bfbfbf;
-    }
-    &:-ms-input-placeholder { /* IE 10+ */
-      color: #bfbfbf;
-    }
-    &:-moz-placeholder { /* Firefox 18- */
-      color: #bfbfbf;
-    }
+  &:hover {
+    border-color: #999999;
   }
+  
+  &:focus {
+    outline: none;
+    border: 2px solid #fbdc8c;
+  }
+
+  &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: #bfbfbf;
+  }
+  &::-moz-placeholder { /* Firefox 19+ */
+    color: #bfbfbf;
+  }
+  &:-ms-input-placeholder { /* IE 10+ */
+    color: #bfbfbf;
+  }
+  &:-moz-placeholder { /* Firefox 18- */
+    color: #bfbfbf;
+  }
+}
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

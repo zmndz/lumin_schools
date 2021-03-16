@@ -3,42 +3,44 @@ export default async function({ store, redirect, route}) {
   // console.log("STORE:", store);
   // console.log("ROUTE:", route);
 
-  let path = route.path;
-  let userType = localStorage.getItem("userType");
-  let student = JSON.parse(localStorage.getItem('student'));
-  let isStudentLoggedIn = student ? student.token : null;
-  let adminVerify = JSON.parse(localStorage.getItem("adminVerify"));
-  let isAdminLoggedIn = adminVerify ? adminVerify.verifyToken : null;
+  // let path = route.path;
+  // let userType = localStorage.getItem("userType");
+  // let student = JSON.parse(localStorage.getItem('student'));
+  // let isStudentLoggedIn = student ? student.token : null;
+  // let adminVerify = JSON.parse(localStorage.getItem("adminVerify"));
+  // let isAdminLoggedIn = adminVerify ? adminVerify.verifyToken : null;
 
-  if (path == "/" && (userType == 'student') && isStudentLoggedIn) {
-    return redirect("/student");
-  } else if ((path.startsWith('/student') && !isStudentLoggedIn)) {
-    return redirect("/");
-  } else if ((path.startsWith('/admin') && (userType == 'student') && !isAdminLoggedIn)) {
-    return redirect("/student");
-  } else if ((path.startsWith('/admin') && (userType == null))) {
-    return redirect("/operator");
-  } else if ((path.startsWith('/operator') && (userType == 'student') && isStudentLoggedIn)) {
-    return redirect("/student");
-  } else if ((path.startsWith('/register') && (userType == 'student') && isStudentLoggedIn)) {
-    return redirect("/student");
-  } 
+  // if (path == "/" && (userType == 'student') && isStudentLoggedIn) {
+  //   return redirect("/student");
+  // } else if ((path.startsWith('/student') && !isStudentLoggedIn)) {
+  //   return redirect("/");
+  // } else if ((path.startsWith('/admin') && (userType == 'student') && !isAdminLoggedIn)) {
+  //   return redirect("/student");
+  // } else if ((path.startsWith('/admin') && (userType == null))) {
+  //   return redirect("/operator");
+  // } else if ((path.startsWith('/operator') && (userType == 'student') && isStudentLoggedIn)) {
+  //   return redirect("/student");
+  // } else if ((path.startsWith('/register') && (userType == 'student') && isStudentLoggedIn)) {
+  //   return redirect("/student");
+  // } 
 
-  if (path == "/" && (userType == 'admin') && isAdminLoggedIn) {
-    return redirect("/admin");
-  } else if ((path.startsWith('/admin') && !isAdminLoggedIn)) {
-    return redirect("/operator");
-  } else if ((path == '/operator' && isAdminLoggedIn)) {
-    return redirect("/admin");
-  } else if ((path.startsWith('/student') && (userType == 'admin') && !isStudentLoggedIn)) {
-    return redirect("/admin");
-  } else if ((path.startsWith('/student') && (userType == null))) {
-    return redirect("/");
-  } else if ((path.startsWith('/student') && (userType == 'admin') && isAdminLoggedIn)) {
-    return redirect("/");
-  }
+  // if (path == "/" && (userType == 'admin') && isAdminLoggedIn) {
+  //   return redirect("/admin");
+  // } else if ((path.startsWith('/admin') && !isAdminLoggedIn)) {
+  //   return redirect("/operator");
+  // } else if ((path == '/operator' && isAdminLoggedIn)) {
+  //   return redirect("/admin");
+  // } else if ((path.startsWith('/student') && (userType == 'admin') && !isStudentLoggedIn)) {
+  //   return redirect("/admin");
+  // } else if ((path.startsWith('/student') && (userType == null))) {
+  //   return redirect("/");
+  // } else if ((path.startsWith('/student') && (userType == 'admin') && isAdminLoggedIn)) {
+  //   return redirect("/");
+  // }
 
 
+
+  // delete this if do not need
 
   // if (!route.matched.length) {
   //   console.log(404);
