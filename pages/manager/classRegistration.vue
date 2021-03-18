@@ -9,11 +9,11 @@
           <b-form-group id="input-group-1" label="پایه تحصیلی:" label-for="input-1">
             <b-form-select
               id="input-1"
-              placeholder="نام معلم را وارد کنید"
               class="form__select"
+              :class="{'form__select--invalid': isGradeEmpty}"
               v-model="selectedGrade"
               :options="grades"
-              @change="validateGrade()"
+              @input="validateGrade()"
             >
             </b-form-select>
             <span v-if="isGradeEmpty === true" class="form__select--invalid-message">
@@ -28,7 +28,7 @@
               class="form__input"
               :class="{'form__input--invalid' : isClassNameEmpty === true}"
               v-model="className"
-              @change="validateClassName()"
+              @input="validateClassName()"
             ></b-form-input>
             <span v-if="isClassNameEmpty === true" class="form__input--invalid-message">
               لطفا برای کلاس نامی وارد کنید
@@ -203,8 +203,6 @@ export default {
     validateClass() {
       let checkGrade = this.validateGrade();
       let checkClassName = this.validateClassName();
-      console.log(checkGrade)
-      console.log(checkClassName)
 
       if (checkGrade && checkClassName) {
       console.log("yes")

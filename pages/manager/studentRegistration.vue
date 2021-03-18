@@ -1,36 +1,36 @@
 <template>
-  <div class="teacher box">
+  <div class="student box">
     <div class="wizard__controls">
       <Steps :steps="stepsData" />
     </div>
     <div class="row">
       <div class="col-12 col-lg-5">
-        <b-form @submit="addTeacher" class="teacher__form">
+        <b-form @submit="addStudent" class="student__form">
           <b-form-group id="input-group-1" label="نام:" label-for="input-1">
             <b-form-input
               id="input-1"
-              placeholder="نام معلم را وارد کنید"
+              placeholder="نام دانش آموز را وارد کنید"
               class="form__input"
               :class="{'form__input--invalid' : isFirstNameEmpty === true}"
               v-model="firstName"
               @input="validateFirstName()"
             ></b-form-input>
             <span v-if="isFirstNameEmpty === true" class="form__input--invalid-message">
-              لطفا نام معلم را وارد کنید
+              لطفا نام دانش آموز را وارد کنید
             </span>
           </b-form-group>
 
           <b-form-group id="input-group-2" label="نام خانوادگی:" label-for="input-2">
             <b-form-input
               id="input-2"
-              placeholder="نام خانوادگی معلم را وارد کنید"
+              placeholder="نام خانوادگی دانش آموز را وارد کنید"
               class="form__input"
               :class="{'form__input--invalid' : isLastNameEmpty === true}"
               v-model="lastName"
               @input="validateLastName()"
             ></b-form-input>
             <span v-if="isLastNameEmpty === true" class="form__input--invalid-message">
-              لطفا نام خانوادگی معلم را وارد کنید
+              لطفا نام خانوادگی دانش آموز را وارد کنید
             </span>
           </b-form-group>
           
@@ -38,135 +38,101 @@
             <b-form-input
               id="input-3"
               type="number"
-              placeholder="کد ملی معلم را وارد کنید"
+              placeholder="کد ملی دانش آموز را وارد کنید"
               class="form__input"
               :class="{'form__input--invalid' : isNationalCodeEmpty === true}"
               v-model="nationalCode"
               @input="validateNationalCode()"
             ></b-form-input>
             <span v-if="isNationalCodeEmpty === true" class="form__input--invalid-message">
-              لطفا کد ملی  10 رقمی معلم را وارد کنید
+              لطفا کد ملی  10 رقمی دانش آموز را وارد کنید
             </span>
           </b-form-group>
 
-          <b-form-group label="کلاس های معلم:" label-for="tags-with-dropdown">
-            <b-form-tags 
-              id="tags-with-dropdown" 
-              v-model="selectedClasses" 
-              size="lg" 
-              no-outer-focus 
-              class="teacher__select mb-2"
-            >
-              <template v-slot="{ tags, disabled, addTag, removeTag }">
-                <b-dropdown 
-                  block 
-                  no-caret 
-                  variant="link" 
-                  menu-class="w-100 "
-                  toggle-class="form__dropdown text-decoration-none"
-                >
-                  <template #button-content>
-                    <div class="teacher__select--title">
-                      کلاس های معلم را انتخاب کنید
-                    </div>
-                  </template>
-                  <b-dropdown-form @submit.stop.prevent="() => {}">
-                    <b-form-group
-                      label="جستجوی نام کلاس"
-                      label-for="tag-search-input"
-                      label-cols-md="auto"
-                      class="mb-0"
-                      label-size="sm"
-                      :description="classesSearchDesc"
-                      :disabled="disabled"
-                    >
-                      <b-form-input
-                        v-model="search"
-                        id="tag-search-input"
-                        type="search"
-                        size="sm"
-                        autocomplete="off"
-                      ></b-form-input>
-                    </b-form-group>
-                  </b-dropdown-form>
-                  <b-dropdown-divider></b-dropdown-divider>
-                  <b-dropdown-item-button
-                    v-for="option in availableClassList"
-                    :key="option"
-                    @click="onOptionClick({ option, addTag })"
-                    button-class="form__dropdown--item"
-                    class="form__dropdown--item"
-                  >
-                    {{ option }}
-                  </b-dropdown-item-button>
-                  <b-dropdown-text v-if="availableClassList.length === 0">
-                    کلاسی وجود ندارد
-                  </b-dropdown-text>
-                </b-dropdown>
+          <b-form-group id="input-group-4" label="نام پدر:" label-for="input-4">
+            <b-form-input
+              id="input-4"
+              placeholder="نام پدر دانش آموز را وارد کنید"
+              class="form__input"
+              :class="{'form__input--invalid' : isFatherNameEmpty === true}"
+              v-model="fatherName"
+              @input="validateFatherName()"
+            ></b-form-input>
+            <span v-if="isFatherNameEmpty === true" class="form__input--invalid-message">
+              لطفا نام پدر دانش آموز را وارد کنید
+            </span>
+          </b-form-group>
 
-                <ul v-if="tags.length > 0" class="teacher__select--tags list-inline d-inline-block mb-2">
-                  <li v-for="tag in tags" :key="tag" class="list-inline-item">
-                    <b-form-tag
-                      @remove="removeTag(tag)"
-                      :title="tag"
-                      :disabled="disabled"
-                      class="teacher__select--tag"
-                    >{{ tag }}</b-form-tag>
-                  </li>
-                </ul>
-              </template>
-            </b-form-tags>
+          <b-form-group id="input-group-5" label="کلاس:" label-for="input-5">
+            <b-form-select
+              id="input-5"
+              class="form__select"
+              :class="{'form__select--invalid': isClassEmpty}"
+              v-model="selectedClass"
+              :options="classList"
+              @input="validateClass()"
+            >
+            </b-form-select>
+            <span v-if="isClassEmpty === true" class="form__select--invalid-message">
+              لطفا برای دانش آموز یک کلاس انتخاب کنید
+            </span>
           </b-form-group>
 
           <button type="submit" class="button button--yellow button--block">
-            اضافه کردن معلم
+            اضافه کردن دانش آموز
           </button>
         </b-form>
       </div>
     </div>
 
-    <div class="teacher__list-wrapper">
-      <div class="teacher__list-title">
-        لیست معلم ها
+    <div class="student__list-wrapper">
+      <div class="student__list-title">
+        لیست دانش آموز ها
       </div>
-      <div class="teacher__list tbl">
-        <div class="teacher__list--header tbl-header">
-          <div class="teacher__list--select tbl-cell">
+      <div class="student__list tbl">
+        <div class="student__list--header tbl-header">
+          <div class="student__list--select tbl-cell">
             <input type="checkbox" name="" id="">
           </div>
-          <div class="teacher__list--firstname tbl-cell ">
+          <div class="student__list--firstname tbl-cell ">
             نام
           </div>
-          <div class="teacher__list--lastname tbl-cell">
+          <div class="student__list--lastname tbl-cell">
             نام خانوادگی
           </div>
-          <div class="teacher__list--nationalcode tbl-cell">
+          <div class="student__list--nationalcode tbl-cell">
             کد ملی
           </div>
-          <div class="teacher__list--edit tbl-cell">
+          <div class="student__list--nationalcode tbl-cell">
+            نام پدر
+          </div>
+          <div class="student__list--edit tbl-cell">
             ویرایش
           </div>
-          <div class="teacher__list--remove tbl-cell">
+          <div class="student__list--remove tbl-cell">
             حذف
           </div>
         </div>
-        <div v-for="(teacher, index) in addedTeachers" :key="index" class="tbl-row">
-          <div class="teacher__list--select tbl-cell">
+        <div v-for="(student, index) in addedStudents" :key="index" class="tbl-row">
+          <div class="student__list--select tbl-cell">
             <input type="checkbox" name="" :id="index">
           </div>
-          <div class="teacher__list--firstname tbl-cell ">
-            {{teacher.firstName}}
+          <div class="student__list--firstname tbl-cell ">
+            {{student.firstName}}
           </div>
-          <div class="teacher__list--lastname tbl-cell">
-            {{teacher.lastName}}
+          <div class="student__list--lastname tbl-cell">
+            {{student.lastName}}
           </div>
-          <div class="teacher__list--nationalcode tbl-cell">
-            {{teacher.nationalCode}}
+          <div class="student__list--nationalcode tbl-cell">
+            {{student.nationalCode}}
           </div>
-          <div class="teacher__list--edit tbl-cell">
+          <div class="student__list--nationalcode tbl-cell">
+            {{student.fatherName}}
+          </div>
+          <div class="student__list--edit tbl-cell">
             <div>E</div>
           </div>
-          <div class="teacher__list--remove tbl-cell">
+          <div class="student__list--remove tbl-cell">
             <div>X</div>
           </div>
         </div>
@@ -174,7 +140,7 @@
     </div>
 
     <div class="wizard__controls">
-      <button class="wizard__controls--next button button--yellow">گام بعدی: ثبت دانش آموزان</button>
+      <button class="wizard__controls--next button button--yellow">تمام</button>
       <button class="wizard__controls--back button button--yellow">بازگشت</button>
     </div>
   </div>
@@ -194,12 +160,27 @@ export default {
       firstName: '',
       lastName: '',
       nationalCode: '',
+      fatherName: '',
       isFirstNameEmpty: null,
       isLastNameEmpty: null,
       isNationalCodeEmpty: null,
-      classList: ['7/1', '7/2', '7/3', '8/1', '8/2', '8/3', '9/1', '9/2', '9/3'],
+      isFatherNameEmpty: null,
+      isClassEmpty: null,
+      // classList: ['7/1', '7/2', '7/3', '8/1', '8/2', '8/3', '9/1', '9/2', '9/3'],
+      classList: [
+        { value: null, text: 'کلاس دانش آموز را انتخاب کنید' },
+        { value: '71', text: '7/1' },
+        { value: '72', text: '7/2' },
+        { value: '73', text: '7/3' },
+        { value: '81', text: '8/1' },
+        { value: '82', text: '8/2' },
+        { value: '83', text: '8/3' },
+        { value: '91', text: '9/1' },
+        { value: '92', text: '9/2' },
+        { value: '93', text: '9/3' },
+      ],
       search: '',
-      selectedClasses: [],
+      selectedClass: null,
       stepsData: [
         {
           id: '1',
@@ -209,61 +190,69 @@ export default {
         {
           id: '2',
           title: 'ثبت اطلاعات معلم ها', 
-          active: true,
+          active: false,
         },
         {
           id: '3',
           title: 'ثبت اطلاعات دانش آموزان', 
-          active: false,
+          active: true,
         },
       ],
-      addedTeachers: [
+      addedStudents: [
         {
           id: '1',
           firstName: 'ظهیر',
           lastName: 'دژبرد',
+          fatherName: 'محمد', 
           nationalCode: '3810260657',
         },
         {
           id: '2',
           firstName: 'کیوان',
           lastName: 'صمدی',
+          fatherName: 'محمد', 
           nationalCode: '3721236589',
         },
         {
           id: '3',
           firstName: 'احمد',
           lastName: 'دژبرد',
+          fatherName: 'محمد', 
           nationalCode: '3712345649',
         },
         {
           id: '4',
           firstName: 'سینا',
           lastName: 'فاتحی',
+          fatherName: 'محمد', 
           nationalCode: '3523651247',
         },
         {
           id: '5',
           firstName: 'ظهیر',
           lastName: 'دژبرد',
+          fatherName: 'محمد', 
           nationalCode: '3810260657',
         },
         {
           id: '6',
           firstName: 'کیوان',
           lastName: 'صمدی',
+          fatherName: 'محمد', 
           nationalCode: '3721236589',
         },
         {
           id: '7',
           firstName: 'احمد',
           lastName: 'دژبرد',
+          fatherName: 'محمد', 
           nationalCode: '3712345649',
         },
         {
           id: '8',
           firstName: 'سینا',
           lastName: 'فاتحی',
+          fatherName: 'محمد', 
           nationalCode: '3523651247',
         },
       ],
@@ -273,38 +262,13 @@ export default {
     ...mapGetters([
 
     ]),
-    criteria() {
-      // Compute the search criteria
-      return this.search.trim().toLowerCase()
-    },
-    availableClassList() {
-      const criteria = this.criteria
-      // Filter out already selected classList
-      const classList = this.classList.filter(opt => this.selectedClasses.indexOf(opt) === -1)
-      if (criteria) {
-        // Show only classList that match criteria
-        return classList.filter(opt => opt.toLowerCase().indexOf(criteria) > -1);
-      }
-      // Show all classList available
-      return classList
-    },
-    classesSearchDesc() {
-      if (this.criteria && this.availableClassList.length === 0) {
-        return 'کلاسی با این نام وجود ندارد'
-      }
-      return ''
-    },
   },
   methods: {
     ...mapActions([
     ]),
-    async onOptionClick({ option, addTag }) {
-      await addTag(option)
-      this.search = ''
-    },
-    addTeacher (e) {
+    addStudent (e) {
       e.preventDefault()
-      this.validateTeacher();
+      this.validateStudent();
     },
     validateFirstName() {
       if (this.firstName == '') {
@@ -324,26 +288,41 @@ export default {
         return true;
       }
     },
+    validateFatherName() {
+      if (this.fatherName == '') {
+        this.isFatherNameEmpty = true;
+        return false;
+      } else {
+        this.isFatherNameEmpty = false;
+        return true;
+      }
+    },
     validateNationalCode() {
-      console.log(this.nationalCode.length)
-      if (this.nationalCode == '') {
+      if (this.nationalCode == '' || this.nationalCode.length !== 10) {
         this.isNationalCodeEmpty = true;
         return false;
       } else {
-        if (this.nationalCode.length !== 10) {
-          return false;
-        } else {
-          this.isNationalCodeEmpty = false;
-          return true;
-        }
+        this.isNationalCodeEmpty = false;
+        return true;
       }
     },
-    validateTeacher() {
+    validateClass() {
+      if (this.selectedClass == null) {
+        this.isClassEmpty = true;
+        return false;
+      } else {
+        this.isClassEmpty = false;
+        return true;
+      }
+    },
+    validateStudent() {
       let checkFirstName = this.validateFirstName();
       let checkLastName = this.validateLastName();
+      let checkFatherName = this.validateFatherName();
       let checkNationalCode = this.validateNationalCode();
+      let checkClass = this.validateClass();
 
-      if (checkFirstName && checkLastName && checkNationalCode) {
+      if (checkFirstName && checkLastName && checkNationalCode && checkFatherName && checkClass) {
         return true;
       } else {
         return false;
@@ -359,7 +338,7 @@ export default {
 <style lang="scss" scoped>
 @import './assets/scss/partials/variables.scss';
 
-.teacher {
+.student {
 
   &__form {
     width: 100%;
