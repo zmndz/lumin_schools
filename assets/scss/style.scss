@@ -26,13 +26,14 @@
 @import 'partials/buttons';
 @import 'partials/box';
 @import 'partials/form';
+@import 'partials/table';
 
 body {
   font-family: 'vazir';
   text-align: right;
 }
 
-input {
+input:not(input[type=checkbox]) {
   border: 1px solid #c3c3c3;
   padding: 0 16px;
   border-radius: 0.25rem;
@@ -45,7 +46,7 @@ input {
   
   &:focus {
     outline: none;
-    border: 2px solid #fbdc8c;
+    // border: 2px solid #fbdc8c;
   }
 
   &::-webkit-input-placeholder { /* Chrome/Opera/Safari */

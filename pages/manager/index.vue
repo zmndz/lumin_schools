@@ -13,7 +13,7 @@
     <div class="wizard__container box__container">
       <div class="manual-registration__wrapper">
         <div class="manual-registration">
-          <div class="manual-registration__button button button--yellow">
+          <div class="manual-registration__button button button--yellow" @click="goToNewClassRegistration()">
             ثبت دستی
           </div>
           <div class="manual-registration__caption">
@@ -71,8 +71,8 @@ export default {
   methods: {
     ...mapActions([
     ]),
-    goToNewExamPage() {
-      // this.$router.push('/admin/newExam');
+    goToNewClassRegistration() {
+      this.$router.push('/manager/classRegistration');
     },
     doThis() {
       console.log("ZZZZZZZZZZZZZZ");
