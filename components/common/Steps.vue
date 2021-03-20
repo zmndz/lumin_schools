@@ -10,8 +10,12 @@
       </div>
       <!-- {{activeId}} {{index + 1}}
       {{activeId  > index + 1}} -->
-      <div class="step__title" :class="{'step__title--active' : step.active, 'step__title--finish' : activeId  > index + 1}">
-        {{step.title}}
+      <div 
+      class="step__title" 
+      :class="{'step__title--active' : step.active, 'step__title--finish' : activeId  > index + 1}"
+      v-html="step.title"
+      >
+        <!-- {{step.title}} -->
       </div>
     </div>
   </div>
@@ -95,6 +99,10 @@ export default {
     padding-left: 16px;
     position: relative;
 
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
     &--active {
       color: unset;
       font-weight: bold;
@@ -119,9 +127,6 @@ export default {
     display: block;
     top: 38px;
     display: block;
-  }
-
-  &__active {
   }
 }
 
@@ -149,6 +154,10 @@ export default {
         background-color: $yellow-color;
         color: #fff;
       }
+    }
+
+    &__title {
+      overflow: initial;
     }
 
     &:not(:last-child) .step__number::after {

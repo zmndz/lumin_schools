@@ -26,7 +26,15 @@
       </div>
       <div class="upload-registration__wrapper">
         <div class="upload-registration">
-          <div class="upload-registration__button button button--yellow">
+          <div class="upload-registration__button button button--yellow" @click="openUploadDialog()">
+            <b-form-file
+              id="js-uploadRegistration"
+              class="upload-registration__upload"
+              plain accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf,application/pdf"
+              v-model="studentFile"
+              @change="setFile($event)"
+            >
+            </b-form-file>
             <span class="upload-registration__button--icon">+</span>
             <span>
               آپلود فایل اکسل
@@ -60,7 +68,7 @@ export default {
   },
   data() {
     return {
-
+      studentFile: null,
     }
   },
   computed: {
@@ -74,10 +82,20 @@ export default {
     goToNewClassRegistration() {
       this.$router.push('/manager/classRegistration');
     },
-    doThis() {
-      console.log("ZZZZZZZZZZZZZZ");
-      alert('DDDDDDDDDDDDDDDD');
-    }
+    async setFile(event) {
+      let file = event.target.files[0];
+      console.log(file)
+      // let result = await this.uploadQuestionFile({testID: this.examList[index].testID, testFile: file})
+      // if (result) {
+        // this.setCurrentExamPreview({questions: result.questions, nameFile: result.lessonTitle, testID: this.examList[index].testID, index: index}, true, false);
+        // this.updateExamList({index: index, isActive: true, nameFile: file.name, questions: result.questions, isPdf: false, pdfUrl: null,});
+      // }
+    },
+    openUploadDialog() {
+      let studentFileUploader = document.getElementById('js-uploadRegistration');
+      studentFileUploader.click();
+    },
+
   },
   async mounted() {
 
@@ -169,6 +187,10 @@ export default {
       color: darken($yellow-color, 5%);
       // border-bottom: 1px solid;
     }
+  }
+
+  &__upload {
+    display: none;
   }
 }
 
