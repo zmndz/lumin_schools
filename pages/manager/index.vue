@@ -1,60 +1,96 @@
 <template>
-  <div class="wizard box">
-    <!-- make this component -->
-    <!-- <Steps :stepsList="{
-      id: '0', title: 'step 1', description: 'this is description',
-      id: '1', title: 'step 2', description: 'this is description',
-      }" 
-      :currentStep="0" 
-    /> -->
-    <div class="wizard__title box__title">
-      روش وارد کردن اطلاعات را انتخاب کنید. در صورت آماده نبودن اطلاعات می توانید روی صرف نظر کلیک کنید.
-    </div>
-    <div class="wizard__container box__container">
-      <div class="manual-registration__wrapper">
-        <div class="manual-registration">
-          <div class="manual-registration__button button button--yellow" @click="goToNewClassRegistration()">
-            ثبت دستی
+  <div class="manager">
+    <div class="manager__statics-wrapper">
+      <div class="manager__students">
+        <div class="manager__students--details">
+          <div class="manager__students--label">
+            دانش آموزان
           </div>
-          <div class="manual-registration__caption">
-            در این روش اطلاعات معلم ها، کلاس ها و دانش آموزان به صورت یک به یک ثبت می شوند.
+          <div class="manager__students--number">
+            {{232}} {{'نفر'}}
           </div>
         </div>
       </div>
-      <div class="wizard__seprator">
-
+      <div class="manager__teachers">
+        <div class="manager__teachers--details">
+          <div class="manager__teachers--label">
+            معلم ها
+          </div>
+          <div class="manager__teachers--number">
+            {{23}} {{'نفر'}}
+          </div>
+        </div>
       </div>
-      <div class="upload-registration__wrapper">
-        <div class="upload-registration">
-          <div class="upload-registration__button button button--yellow" @click="openUploadDialog()">
-            <b-form-file
-              id="js-uploadRegistration"
-              class="upload-registration__upload"
-              plain accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf,application/pdf"
-              v-model="studentFile"
-              @change="setFile($event)"
-            >
-            </b-form-file>
-            <span class="upload-registration__button--icon">+</span>
-            <span>
-              آپلود فایل اکسل
-            </span>
-            <span>
-              لیست دانش آموزان
-            </span>
+      <div class="manager__classes">
+        <div class="manager__classes--details">
+          <div class="manager__classes--label">
+            کلاس ها
           </div>
-          <div class="upload-registration__caption">
-            در این روش اطلاعات دانش آموزان و کلاس ها به وسیله فایل اکسل ثبت شده، سپس تایید می شوند. اطلاعات معلم ها به صورت یک به یک وارد می شود.
-          </div>
-          <div class="upload-registration__link">
-            دانلود نمونه فایل اکسل
+          <div class="manager__classes--number">
+            {{8}} {{'عدد'}}
           </div>
         </div>
       </div>
     </div>
-    <button class="wizard__link button button--outline--yellow button--no-shadow">
-      صرف نظر
-    </button>
+    <div class="manager__exams-wrapper box">
+      <div class="manager__exams-title">
+        آزمون ها
+      </div>
+      <div class="manager__list tbl">
+        <div class="manager__list--header tbl-header">
+          <!-- <div class="manager__list--select tbl-cell">
+            <input type="checkbox" name="" id="">
+          </div> -->
+          <div class="manager__list--lessonTitle tbl-cell ">
+            نام درس
+          </div>
+          <div class="manager__list--lessonCode tbl-cell">
+            کد درس
+          </div>
+          <div class="manager__list--date tbl-cell">
+            تاریخ
+          </div>
+          <div class="manager__list--time tbl-cell">
+            ساعت
+          </div>
+          <div class="manager__list--teacherName tbl-cell">
+            معلم
+          </div>
+          <div class="manager__list--status tbl-cell">
+            وضعیت
+          </div>
+          <div class="manager__list--report tbl-cell">
+            کارنامه
+          </div>
+        </div>
+        <div v-for="(exam, index) in examList" :key="index" class="tbl-row">
+          <!-- <div class="manager__list--select tbl-cell">
+            <input type="checkbox" name="" :id="index">
+          </div> -->
+          <div class="manager__list--lessonTitle tbl-cell ">
+            {{exam.lessonTitle}}
+          </div>
+          <div class="manager__list--lessonCode tbl-cell">
+            {{exam.lessonCode}}
+          </div>
+          <div class="manager__list--date tbl-cell">
+            {{exam.date}}
+          </div>
+          <div class="manager__list--time tbl-cell">
+            {{exam.time}}
+          </div>
+          <div class="manager__list--teacherName tbl-cell">
+            {{exam.teacherName}}
+          </div>
+          <div class="manager__list--status tbl-cell">
+            {{exam.status}}
+          </div>
+          <div class="manager__list--report tbl-cell">
+            {{exam.report}}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -68,7 +104,89 @@ export default {
   },
   data() {
     return {
-      studentFile: null,
+      examList: [
+        {
+          id: '1',
+          lessonTitle: 'ریاضی',
+          lessonCode: '1250',
+          date: '10/02/1400', 
+          time: '10:00 تا 10:30',
+          teacherName: 'محمد کریمی', 
+          status: 'پیش رو', 
+          report: 'دانلود',
+        },
+        {
+          id: '2',
+          lessonTitle: 'علوم',
+          lessonCode: '1251',
+          date: '11/02/1400', 
+          time: '10:00 تا 10:30',
+          teacherName: 'محمد کریمی', 
+          status: 'پیش رو', 
+          report: 'دانلود',
+        },
+        {
+          id: '3',
+          lessonTitle: 'ادبیات',
+          lessonCode: '1252',
+          date: '13/02/1400', 
+          time: '10:00 تا 10:30',
+          teacherName: 'محمد کریمی', 
+          status: 'پیش رو', 
+          report: 'دانلود',
+        },
+        {
+          id: '4',
+          lessonTitle: 'دین و زندگی',
+          lessonCode: '1253',
+          date: '14/02/1400', 
+          time: '10:00 تا 10:30',
+          teacherName: 'محمد کریمی', 
+          status: 'پیش رو', 
+          report: 'دانلود',
+        },
+        {
+          id: '5',
+          lessonTitle: 'انگلیسی',
+          lessonCode: '1254',
+          date: '15/02/1400', 
+          time: '10:00 تا 10:30',
+          teacherName: 'محمد کریمی', 
+          status: 'پیش رو', 
+          report: 'دانلود',
+        },
+        {
+          id: '6',
+          lessonTitle: 'زبان فارسی',
+          lessonCode: '1255',
+          date: '16/02/1400', 
+          time: '10:00 تا 10:30',
+          teacherName: 'محمد کریمی', 
+          status: 'پیش رو', 
+          report: 'دانلود',
+        },
+        {
+          id: '7',
+          lessonTitle: 'عربی',
+          lessonCode: '1256',
+          date: '17/02/1400', 
+          time: '10:00 تا 10:30',
+          teacherName: 'محمد کریمی', 
+          status: 'پیش رو', 
+          report: 'دانلود',
+        },
+        {
+          id: '8',
+          lessonTitle: 'آمار واحتمالات',
+          lessonCode: '1257',
+          date: '18/02/1400', 
+          time: '10:00 تا 10:30',
+          teacherName: 'محمد کریمی', 
+          status: 'پیش رو', 
+          report: 'دانلود',
+        },
+
+      ],
     }
   },
   computed: {
@@ -82,20 +200,6 @@ export default {
     goToNewClassRegistration() {
       this.$router.push('/manager/classRegistration');
     },
-    async setFile(event) {
-      let file = event.target.files[0];
-      console.log(file)
-      // let result = await this.uploadQuestionFile({testID: this.examList[index].testID, testFile: file})
-      // if (result) {
-        // this.setCurrentExamPreview({questions: result.questions, nameFile: result.lessonTitle, testID: this.examList[index].testID, index: index}, true, false);
-        // this.updateExamList({index: index, isActive: true, nameFile: file.name, questions: result.questions, isPdf: false, pdfUrl: null,});
-      // }
-    },
-    openUploadDialog() {
-      let studentFileUploader = document.getElementById('js-uploadRegistration');
-      studentFileUploader.click();
-    },
-
   },
   async mounted() {
 
@@ -106,91 +210,182 @@ export default {
 <style lang="scss" scoped>
 @import './assets/scss/partials/variables.scss';
 
-.wizard {
+.manager {
 
-  &__title {
+  &__statics {
+
+    &-wrapper {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem;
+      box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      padding: 2rem;
+      background-color: #fff;
+      border-radius: 6px;
+    }
   }
 
-  &__container {
-    margin-top: 64px;
-  }
-
-  &__seprator {
-    display: none;
-    width: 2px;
-    border-right: 2px dashed #ccc;
-  }
-
-  &__link { 
-    margin: 24px 0;
-  }
-}
-
-.manual-registration {
-
-  &__wrapper {
-    width: 240px;
-    margin: 0 120px;
-    margin-bottom: 64px;
-  }
-
-  &__button {
+  &__students {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 240px;
-    height: 140px;
-  }
+    width: 33%;
+    height: 100px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-left: 24px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+    background-color: lighten($yellow-color, 15%);
+    cursor: pointer;
 
-  &__caption {
-    margin-top: 32px;
-    line-height: 28px;
-    text-align: justify;
-  }
-}
+    &--number {
+      color: #d89c00;
+      font-size: 16px;
+      text-align: center;
+    }
 
-.upload-registration {
-
-  &__wrapper {
-    width: 240px;
-    margin: 0 120px;
-  }
-
-  &__button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 240px;
-    height: 140px;
+    &--label {
+      color: #d89c00;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
 
     &--icon {
-      font-size: 58px;
-      line-height: 46px;
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      margin-left: 0.75rem;
     }
   }
 
-  &__caption {
-    margin-top: 32px;
-    line-height: 28px;
-    text-align: justify;
-  }
-
-  &__link {
-    margin: 16px 0;
-    color: $yellow-color;
+  &__teachers {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 33%;
+    height: 100px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin: 0 24px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+    background-color: lighten($purple-color, 15%);
     cursor: pointer;
-    display: inline-block;
-    transition: all 0.2s ease-in-out;
 
-    &:hover {
-      color: darken($yellow-color, 5%);
-      // border-bottom: 1px solid;
+    &--number {
+      color: #9a00d6;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    &--label {
+      color: #9a00d6;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    &--icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      margin-left: 0.75rem;
     }
   }
 
-  &__upload {
-    display: none;
+  &__classes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 33%;
+    height: 100px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-right: 24px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+    background-color: lighten($blue-color, 15%);
+    cursor: pointer;
+
+    &--number {
+      color: #0077de;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    &--label {
+      color: #0077de;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    &--icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      margin-left: 0.75rem;
+    }
+  }
+
+  &__list {
+
+    &--header {
+      // background-color: darkgrey;
+    }
+
+    &--select {
+      min-width: 42px;
+      width: 46px;
+      justify-content: center;
+    }
+
+    &--lessonTitle {
+      min-width: 120px;
+      width: 100%;
+    }
+
+    &--lessonCode {
+      min-width: 80px;
+      width: 50%;
+    }
+
+    &--date {
+      min-width: 100px;
+      width: 100%;
+    }
+
+    &--time {
+      min-width: 120px;
+      width: 100%;
+    }
+
+    &--teacherName {
+      min-width: 100px;
+      width: 100%;
+    }
+
+    &--status {
+      min-width: 90px;
+      width: 90px;
+    }
+
+    &--report {
+      min-width: 90px;
+      width: 90px;
+    }
+  }
+
+  &__exams {
+
+    &-title {
+      font-weight: bold;
+      margin-bottom: 2rem;
+    }
   }
 }
 
@@ -201,32 +396,7 @@ export default {
 
 // large devices (laptops, 768px and up)
 @media (min-width: 991.98px) {
-  .wizard {
 
-    &__container {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: initial;
-    }
-
-    &__seprator {
-      display: block;
-    }
-  }
-
-  .manual-registration {
-
-    &__wrapper {
-      margin: 0 90px;
-    }
-  }
-
-  .upload-registration {
-
-    &__wrapper {
-      margin: 0 90px;
-    }
-  }
 }
 
 // extra large devices (desktops, 768px and up)
