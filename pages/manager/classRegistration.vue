@@ -304,6 +304,7 @@ export default {
     &--next {
       width: 220px;
       display: unset;
+      margin-bottom: 0;
     }
 
     &--back {

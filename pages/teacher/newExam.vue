@@ -1,0 +1,545 @@
+<template>
+  <div class="teacher box">
+    <div class="row">
+      <div class="col-12 col-lg-5">
+        <b-form class="teacher__form">
+
+          <b-form-group label="کلاس:" label-for="tags-with-dropdown">
+            <b-form-tags 
+              id="tags-with-dropdown" 
+              v-model="selectedClasses" 
+              size="lg" 
+              no-outer-focus 
+              class="teacher__select mb-2"
+            >
+              <template v-slot="{ tags, disabled, addTag, removeTag }">
+                <b-dropdown 
+                  block 
+                  no-caret 
+                  variant="link"
+                  menu-class="w-100 "
+                  toggle-class="form__dropdown text-decoration-none"
+                >
+                  <template #button-content>
+                    <div 
+                      class="teacher__select--title "
+                      :class="{'form__select--invalid': isSelectedClassEmpty}"
+                    >
+                      کلاس های مورد نظر برای امتحان را انتخاب کنید
+                    </div>
+                    <span v-if="isSelectedClassEmpty === true" class="form__select--invalid-message">
+                      لطفا کلاس های مورد امتحان را انتخاب کنید
+                    </span>
+
+                  </template>
+                  <b-dropdown-form @submit.stop.prevent="() => {}">
+                    <b-form-group
+                      label="جستجوی نام کلاس"
+                      label-for="tag-search-input"
+                      label-cols-md="auto"
+                      class="mb-0"
+                      label-size="sm"
+                      :description="classesSearchDesc"
+                      :disabled="disabled"
+                    >
+                      <b-form-input
+                        v-model="search"
+                        id="tag-search-input"
+                        type="search"
+                        size="sm"
+                        autocomplete="off"
+                      ></b-form-input>
+                    </b-form-group>
+                  </b-dropdown-form>
+                  <b-dropdown-divider></b-dropdown-divider>
+                  <b-dropdown-item-button
+                    v-for="option in availableClassList"
+                    :key="option"
+                    @click="onOptionClick({ option, addTag })"
+                    button-class="form__dropdown--item"
+                    class="form__dropdown--item"
+                  >
+                    {{ option }}
+                  </b-dropdown-item-button>
+                  <b-dropdown-text v-if="availableClassList.length === 0">
+                    کلاسی وجود ندارد
+                  </b-dropdown-text>
+                </b-dropdown>
+
+                <ul v-if="tags.length > 0" class="teacher__select--tags list-inline d-inline-block mb-2">
+                  <li v-for="tag in tags" :key="tag" class="list-inline-item">
+                    <b-form-tag
+                      @remove="removeTag(tag)"
+                      :title="tag"
+                      :disabled="disabled"
+                      class="teacher__select--tag"
+                    >{{ tag }}</b-form-tag>
+                  </li>
+                </ul>
+              </template>
+            </b-form-tags>
+          </b-form-group>
+
+          <b-form-group id="input-group-1" label="درس:" label-for="input-1">
+            <b-form-select
+              id="input-1"
+              class="form__select"
+              :class="{'form__select--invalid': isSelectedLessonEmpty}"
+              v-model="selectedLesson"
+              :options="lessonList"
+              @input="validateLesson()"
+            >
+            </b-form-select>
+            <span v-if="isSelectedLessonEmpty === true" class="form__select--invalid-message">
+              لطفا درس را انتخاب کنید
+            </span>
+          </b-form-group>
+          <b-form-group id="input-group-2" label="نوع آزمون:" label-for="input-2">
+            <b-form-select
+              id="input-2"
+              class="form__select"
+              :class="{'form__select--invalid': isSelectedExamTypeEmpty}"
+              v-model="selectedExamType"
+              :options="examType"
+              @input="validateExamType()"
+            >
+            </b-form-select>
+            <span v-if="isSelectedExamTypeEmpty === true" class="form__select--invalid-message">
+              لطفا نوع آزمون را انتخاب کنید
+            </span>
+          </b-form-group>
+
+          <b-form-group id="input-group-3" label="تاریخ آزمون:" label-for="input-3">
+            <b-form-input
+              id="input-3"
+              placeholder="تاریخ آزمون را وارد کنید"
+              class="form__input"
+              :class="{'form__input--invalid' : isExamDateEmpty === true}"
+              v-model="examDate"
+              autocomplete="off"
+              @input="validateExamDate()"
+            ></b-form-input>
+            <span v-if="isExamDateEmpty === true" class="form__input--invalid-message">
+              لطفا تاریخ آزمون را وارد کنید
+            </span>
+            <datePicker element="input-3" v-model="examDate" color="#fdbc11" auto-submit @input="validateExamDate()" />
+          </b-form-group>
+
+          <b-form-group id="input-group-4" label="ساعت شروع آزمون:" label-for="input-4">
+            <b-form-input
+              id="input-4"
+              placeholder="ساعت شروع آزمون را وارد کنید"
+              class="form__input"
+              :class="{'form__input--invalid' : isExamStartTimeEmpty === true}"
+              autocomplete="off"
+              @input="validateExamStartTime()"
+              v-model="examStartTime"
+            ></b-form-input>
+            <span v-if="isExamStartTimeEmpty === true" class="form__input--invalid-message">
+              لطفا ساعت شروع آزمون را وارد کنید
+            </span>
+            <datePicker type="time" :jumpMinute="15" :roundMinute="true" element="input-4" v-model="examStartTime" color="#fdbc11" auto-submit @input="validateExamStartTime()" />
+          </b-form-group>
+
+          <b-form-group id="input-group-5" label="ساعت پایان آزمون:" label-for="input-5">
+            <b-form-input
+              id="input-5"
+              placeholder="ساعت پایان آزمون را وارد کنید"
+              class="form__input"
+              :class="{'form__input--invalid' : isExamEndTimeEmpty === true}"
+              v-model="examEndTime"
+              autocomplete="off"
+              @input="validateExamEndTime()"
+            ></b-form-input>
+            <span v-if="isExamEndTimeEmpty === true" class="form__input--invalid-message">
+              لطفا ساعت پایان آزمون را وارد کنید
+            </span>
+            <datePicker type="time" :jumpMinute="15" :roundMinute="true" element="input-5" v-model="examEndTime" color="#fdbc11" auto-submit @input="validateExamEndTime()" />
+          </b-form-group>
+        <div class="wizard__controls">
+          <button class="wizard__controls--next button button--yellow" @click="addExam">ذخیره و جدید</button>
+          <button class="wizard__controls--next button button--yellow">ذخیره و بستن</button>
+          <button class="wizard__controls--back button button--yellow">انصراف</button>
+        </div>
+        </b-form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState, mapActions, mapGetters } from 'vuex'
+import Steps from '~/components/common/Steps'
+import datePicker from 'vue-persian-datetime-picker'
+
+export default {
+  layout: 'managerLayout',
+  components: {
+    Steps,
+    datePicker,
+  },
+  data() {
+    return {
+      examDate: '',
+      examStartTime: '',
+      examEndTime: '',
+      selectedLesson: null,
+      selectedExamType: null,
+      selectedClasses: [],
+      isExamDateEmpty: null,
+      isExamStartTimeEmpty: null,
+      isExamEndTimeEmpty: null,
+      isSelectedLessonEmpty: null,
+      isSelectedExamTypeEmpty: null,
+      isSelectedClassEmpty: null,
+      search: '',
+      lessonList: [
+        {
+          value: null,
+          text: 'درس مورد نظر را انتخاب کنید',
+        },
+        {
+          value: '1',
+          text: 'ریاضی',
+        },
+        {
+          value: '2',
+          text: 'علوم',
+        },
+        {
+          value: '3',
+          text: 'دینی',
+        },
+      ],
+      examType: [
+        {
+          value: null,
+          text: 'نوع آزمون را انتخاب کنید',
+        },
+        {
+          value: '1',
+          text: 'میان ترم',
+        },
+        {
+          value: '2',
+          text: 'کلاسی',
+        },
+        {
+          value: '3',
+          text: 'پایانی نوبت اول',
+        },
+        {
+          value: '4',
+          text: 'پایانی نوبت دوم',
+        },
+        {
+          value: '5',
+          text: 'نظر سنجی',
+        },
+        {
+          value: '6',
+          text: 'متفرقه',
+        },
+      ],
+      classList: ['7/1', '7/2', '7/3', '8/1', '8/2', '8/3', '9/1', '9/2', '9/3'],
+      stepsData: [
+        {
+          id: '1',
+          title: 'ثبت کلاس ها',
+          active: false,
+        },
+        {
+          id: '2',
+          title: 'ثبت اطلاعات معلم ها', 
+          active: true,
+        },
+        {
+          id: '3',
+          title: 'ثبت اطلاعات دانش آموزان', 
+          active: false,
+        },
+      ],
+      addedTeachers: [
+        {
+          id: '1',
+          firstName: 'ظهیر',
+          lastName: 'دژبرد',
+          nationalCode: '3810260657',
+        },
+        {
+          id: '2',
+          firstName: 'کیوان',
+          lastName: 'صمدی',
+          nationalCode: '3721236589',
+        },
+        {
+          id: '3',
+          firstName: 'احمد',
+          lastName: 'دژبرد',
+          nationalCode: '3712345649',
+        },
+        {
+          id: '4',
+          firstName: 'سینا',
+          lastName: 'فاتحی',
+          nationalCode: '3523651247',
+        },
+        {
+          id: '5',
+          firstName: 'ظهیر',
+          lastName: 'دژبرد',
+          nationalCode: '3810260657',
+        },
+        {
+          id: '6',
+          firstName: 'کیوان',
+          lastName: 'صمدی',
+          nationalCode: '3721236589',
+        },
+        {
+          id: '7',
+          firstName: 'احمد',
+          lastName: 'دژبرد',
+          nationalCode: '3712345649',
+        },
+        {
+          id: '8',
+          firstName: 'سینا',
+          lastName: 'فاتحی',
+          nationalCode: '3523651247',
+        },
+      ],
+    }
+  },
+  computed: {
+    ...mapGetters([
+
+    ]),
+    criteria() {
+      // Compute the search criteria
+      return this.search.trim().toLowerCase()
+    },
+    availableClassList() {
+      const criteria = this.criteria
+      // Filter out already selected classList
+      const classList = this.classList.filter(opt => this.selectedClasses.indexOf(opt) === -1)
+      if (criteria) {
+        // Show only classList that match criteria
+        return classList.filter(opt => opt.toLowerCase().indexOf(criteria) > -1);
+      }
+      // Show all classList available
+      return classList
+    },
+    classesSearchDesc() {
+      if (this.criteria && this.availableClassList.length === 0) {
+        return 'کلاسی با این نام وجود ندارد'
+      }
+      return ''
+    },
+  },
+  methods: {
+    ...mapActions([
+    ]),
+    async onOptionClick({ option, addTag }) {
+      await addTag(option)
+      this.search = ''
+    },
+    addExam (e) {
+      e.preventDefault()
+      this.validateExam();
+    },
+    validateExamDate() {
+      if (this.examDate == '') {
+        this.isExamDateEmpty = true;
+        return false;
+      } else {
+        this.isExamDateEmpty = false;
+        return true;
+      }
+    },
+    validateExamStartTime() {
+      if (this.examStartTime == '') {
+        this.isExamStartTimeEmpty = true;
+        return false;
+      } else {
+        this.isExamStartTimeEmpty = false;
+        return true;
+      }
+    },
+    validateExamEndTime() {
+      if (this.examEndTime == '') {
+        this.isExamEndTimeEmpty = true;
+        return false;
+      } else {
+        this.isExamEndTimeEmpty = false;
+        return true;
+      }
+    },
+    validateClasses() {
+      console.log(this.selectedClasses);
+      if (this.selectedClasses.length == 0) {
+        this.isSelectedClassEmpty = true;
+        return false;
+      } else {
+        this.isSelectedClassEmpty = false;
+        return true;
+      }
+    },
+    validateLesson() {
+      if (this.selectedLesson == null) {
+        this.isSelectedLessonEmpty = true;
+        return false;
+      } else {
+        this.isSelectedLessonEmpty = false;
+        return true;
+      }
+    },
+    validateExamType() {
+      if (this.selectedExamType == null) {
+        this.isSelectedExamTypeEmpty = true;
+        return false;
+      } else {
+        this.isSelectedExamTypeEmpty = false;
+        return true;
+      }
+    },
+    validateExam() {
+      let checkExamDate = this.validateExamDate();
+      let checkExamStartTime= this.validateExamStartTime();
+      let checkExamEndTime = this.validateExamEndTime();
+      let checkExamType = this.validateExamType();
+      let checkLesson = this.validateLesson();
+      let checkClasses = this.validateClasses();
+
+      if (checkExamDate && checkExamStartTime && checkExamType && checkExamEndTime && checkLesson && checkClasses) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
+  async mounted() {
+
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import './assets/scss/partials/variables.scss';
+
+.teacher {
+
+  &__form {
+    width: 100%;
+  }
+
+  &__list-wrapper {
+    margin: 3rem 0;
+  }
+  &__list-title {
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+
+  &__select {
+    padding: 0;
+    border: none;
+
+    &:focus {
+      border-color: rgba($color: $yellow-color, $alpha: 0.5) !important;
+      box-shadow: none !important;
+      border: 2px solid #fbdc8c !important;
+    }
+
+    &--title {
+      background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat left 0.75rem center/8px 10px;
+      color: rgb(170, 170, 170);
+      cursor: pointer;
+      text-align: right;
+      border: 1px solid #c3c3c3;
+      border-radius: 4px;
+      padding: 8px 16px;
+      transition: all 0.2s ease-in-out;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 12px;
+
+      &:hover {
+        border-color: #999999;
+      }
+
+      &:focus {
+        border-color: rgba($color: $yellow-color, $alpha: 0.5) !important;
+        box-shadow: none !important;
+        border: 2px solid #fbdc8c;
+      }
+    }
+
+    &--tags {
+      direction: ltr;
+      margin-top: 0.75rem;
+    }
+
+    &--tag {
+      padding: 4px 12px;
+      border-radius: 10rem;
+      background-color: $purple-color;
+    }
+  }
+}
+
+.wizard__controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+
+  &--next {
+    width: 100%;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  &--back {
+    width: 100%;
+    display: block;
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 767.98px) {
+.teacher {
+
+  &__select {
+
+    &--title {
+      font-size: 1rem;
+    }
+  }
+}
+}
+
+// large devices (laptops, 768px and up)
+@media (min-width: 991.98px) {
+  .wizard__controls {
+    flex-direction: unset;
+
+    &--next {
+      width: unset;
+      display: unset;
+      margin-bottom: 0;
+    }
+
+    &--back {
+      width: unset;
+      display: unset;
+    }
+  }
+
+}
+
+// extra large devices (desktops, 768px and up)
+@media (min-width: 1199.98px) {
+
+}
+</style>

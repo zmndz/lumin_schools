@@ -62,12 +62,15 @@
       &-message {
         color: $red-color;
         font-size: 0.75rem;
+        display: flex;
+        text-align: right;
       }
     }
   }
 
   &__dropdown {
     padding: 0;
+    text-decoration: none !important;
 
     &:focus {
       border-color: rgba($color: $yellow-color, $alpha: 0.5) !important;
@@ -79,13 +82,48 @@
     &--item {
 
       &:active {
-        background-color: $yellow-color;
+        background-color: $yellow-color !important;
       }
 
       &:focus {
         box-shadow: 0 0 0 2px #fff;
         border-radius: 6px;
         outline: none;
+      }
+    }
+
+    &--icon {
+      font-size: 2rem;
+      width: 32px;
+      height: 32px;
+      color: $purple-color;
+      text-align: center;
+      line-height: 34px;
+      border: none !important;
+
+      &:hover {
+        color: darken($purple-color, 10%);
+      }
+
+      &:focus {
+        box-shadow: none !important;
+      }  
+    }
+
+    &--menu {
+      text-align: right;
+    }
+
+    &--link {
+      a {
+        &:active {
+          background-color: $yellow-color !important;
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 2px #fff;
+          outline: none;
+        }
       }
     }
   }

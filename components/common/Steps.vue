@@ -148,12 +148,6 @@ export default {
     
     &__number {
       margin: 8px;
-
-      &--active {
-        border: none;
-        background-color: $yellow-color;
-        color: #fff;
-      }
     }
 
     &__title {

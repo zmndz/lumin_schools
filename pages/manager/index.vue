@@ -220,10 +220,11 @@ export default {
       justify-content: space-between;
       align-items: center;
       margin-bottom: 3rem;
-      box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 3px 6px 0 rgba(32, 33, 36, 0.06);
       padding: 2rem;
       background-color: #fff;
       border-radius: 6px;
+      flex-direction: column;
     }
   }
 
@@ -231,11 +232,11 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 33%;
+    width: 100%;
     height: 100px;
     background-color: #fff;
     box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    margin-left: 24px;
+    margin-bottom: 32px;
     border-radius: 4px;
     color: #fff;
     font-weight: bold;
@@ -266,11 +267,11 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 33%;
+    width: 100%;
     height: 100px;
     background-color: #fff;
     box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    margin: 0 24px;
+    margin-bottom: 32px;
     border-radius: 4px;
     color: #fff;
     font-weight: bold;
@@ -301,11 +302,10 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 33%;
+    width: 100%;
     height: 100px;
     background-color: #fff;
     box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    margin-right: 24px;
     border-radius: 4px;
     color: #fff;
     font-weight: bold;
@@ -396,6 +396,34 @@ export default {
 
 // large devices (laptops, 768px and up)
 @media (min-width: 991.98px) {
+
+.manager {
+
+  &__statics {
+
+    &-wrapper {
+      flex-direction: row;
+    }
+  }
+
+  &__students {
+    width: 33%;
+    margin-left: 24px;
+    margin-bottom: 0;
+  }
+
+  &__teachers {
+    width: 33%;
+    margin: 0 24px;
+    margin-bottom: 0;
+  }
+
+  &__classes {
+    width: 33%;
+    margin-right: 24px;
+    margin-bottom: 0;
+  }
+}
 
 }
 
