@@ -3,7 +3,6 @@
     <div class="row">
       <div class="col-12 col-lg-5">
         <b-form class="teacher__form">
-
           <b-form-group label="کلاس:" label-for="tags-with-dropdown">
             <b-form-tags 
               id="tags-with-dropdown" 
@@ -79,7 +78,6 @@
               </template>
             </b-form-tags>
           </b-form-group>
-
           <b-form-group id="input-group-1" label="درس:" label-for="input-1">
             <b-form-select
               id="input-1"
@@ -108,7 +106,8 @@
               لطفا نوع آزمون را انتخاب کنید
             </span>
           </b-form-group>
-
+          <!-- <MathLiveInput :config="config" v-model="formula" v-on:input="input()"></MathLiveInput>
+          {{formula}} -->
           <b-form-group id="input-group-3" label="تاریخ آزمون:" label-for="input-3">
             <b-form-input
               id="input-3"
@@ -124,7 +123,6 @@
             </span>
             <datePicker element="input-3" v-model="examDate" color="#fdbc11" auto-submit @input="validateExamDate()" />
           </b-form-group>
-
           <b-form-group id="input-group-4" label="ساعت شروع آزمون:" label-for="input-4">
             <b-form-input
               id="input-4"
@@ -140,7 +138,6 @@
             </span>
             <datePicker type="time" :jumpMinute="15" :roundMinute="true" element="input-4" v-model="examStartTime" color="#fdbc11" auto-submit @input="validateExamStartTime()" />
           </b-form-group>
-
           <b-form-group id="input-group-5" label="ساعت پایان آزمون:" label-for="input-5">
             <b-form-input
               id="input-5"
@@ -156,11 +153,119 @@
             </span>
             <datePicker type="time" :jumpMinute="15" :roundMinute="true" element="input-5" v-model="examEndTime" color="#fdbc11" auto-submit @input="validateExamEndTime()" />
           </b-form-group>
-        <div class="wizard__controls">
-          <button class="wizard__controls--next button button--yellow" @click="addExam">ذخیره و جدید</button>
-          <button class="wizard__controls--next button button--yellow">ذخیره و بستن</button>
-          <button class="wizard__controls--back button button--yellow">انصراف</button>
-        </div>
+
+          <div class="teacher__upload">
+            <div class="row">
+              <div class="col-12">
+                <div class="teacher__upload--button">
+                  + آپلود سوالات
+                </div>
+              </div>
+              <div class="col-12">
+                <div v-b-modal.help-modal class="teacher__upload--help">
+                  راهنمای آپلود سوالات
+                </div>
+              </div>
+            </div>
+            <b-modal id="help-modal" title="">
+              <div class="help">
+                <div class="help__title">
+
+                </div>
+                <div class="help__content">
+                  <div class="my-4">شما می توانید با آپلود فایل های Word و PDF سوالات امتحان را وارد کنید. برای نتیجه بهتر، استفاده از فایل Word پیشنهاد می شود.</div>
+                  <ul>
+                    <li>
+                      <div>
+                        صورت سوال به استفاده از شماره سوال و خط فاصله مشخص می شود. مثال:
+                      </div>
+                      <div>
+                        ۱- کدام یک از موارد زیر...
+                      </div>
+                      <div>
+                        15- گزینه درست را...
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        برای سوالات چهار گزینه ای، گزینه های هر سوال را بعد از سوال و با استفاده از الف، ب، ج، د و یک پرانتز مشخص کنید. مثال:
+                      </div>
+                      <div>
+                        1- در کدام یک از موارد زیر کربن دی اکسید مصرف می شود؟
+                      </div>
+                      <div>
+                        الف) فتوسنتز
+                      </div>
+                      <div>
+                        ب) تنفس
+                      </div>
+                      <div>
+                        ج) تجزیه بدن جانداران
+                      </div>
+                      <div>
+                        د) سوزانده سوخا های فسیلی
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        برای سوالات چهار گزینه ای، گزینه درست را با استفاده از دو پرانتز )) مشخص کنید. این کار برای تصحیح خودکار مورد نیاز است و در صورت مشخص نبودن گزینه درست با استفاده از )) نمره سوال روی بقیه سوالات تقسیم خواهد شد. مثال:
+                      </div>
+                      <div>
+                        1- در کدام یک از موارد زیر کربن دی اکسید مصرف می شود؟
+                      </div>
+                      <div>
+                        الف)) فتوسنتز
+                      </div>
+                      <div>
+                        ب) تنفس
+                      </div>
+                      <div>
+                        ج) تجزیه بدن جانداران
+                      </div>
+                      <div>
+                        د) سوزانده سوخا های فسیلی
+                      </div>
+
+                      <div>
+                        2- نوعی کربوهیدارت که حالت ژله اي دارد و از دیواره یاخته اي جلبک ها بدست می آید؟
+                      </div>
+                      <div>
+                        الف) گرداب
+                      </div>
+                      <div>
+                        ب) گلدان
+                      </div>
+                      <div>
+                        ج) مرداب
+                      </div>
+                      <div>
+                        د)) گل دار
+                      </div>
+                    </li>
+                  </ul>
+                  
+                  <div>
+                    در صورت لزوم می توانید از تصاویر، فرمول های ریاضی و شیمی برای هر سوال استفاده کنید.
+                  </div>
+                  <div class="help__link">
+                    دانلود فایل فالب سوالات Word
+                  </div>
+                </div>
+              </div>
+
+              <template #modal-footer="{ ok }">
+                <!-- Emulate built in modal footer ok and cancel button actions -->
+                <b-button size="sm" variant="warning" @click="ok()">
+                  بستن
+                </b-button>
+              </template>
+            </b-modal>
+          </div>
+          <div class="wizard__controls">
+            <button class="wizard__controls--next button button--yellow" @click="addExam">ذخیره و جدید</button>
+            <button class="wizard__controls--next button button--yellow">ذخیره و بستن</button>
+            <button class="wizard__controls--back button button--yellow">انصراف</button>
+          </div>
         </b-form>
       </div>
     </div>
@@ -171,15 +276,23 @@
 import { mapState, mapActions, mapGetters } from 'vuex'
 import Steps from '~/components/common/Steps'
 import datePicker from 'vue-persian-datetime-picker'
+// import MathLive from "mathlive";
+// import MathLiveInput from "~/components/common/MathLiveInput";
 
 export default {
   layout: 'managerLayout',
   components: {
     Steps,
     datePicker,
+    // MathLiveInput,
   },
   data() {
     return {
+      // formula: 'f(x)',
+      // config:{
+      //   smartMode: false,
+      //   virtualKeyboardMode: "manual",
+      // },
       examDate: '',
       examStartTime: '',
       examEndTime: '',
@@ -416,10 +529,13 @@ export default {
       } else {
         return false;
       }
-    }
+    },
+    input : function() {
+      console.log(this.formula)
+    },
   },
   async mounted() {
-
+    // MathLive.renderMathInDocument();
   }
 }
 </script>
@@ -436,6 +552,7 @@ export default {
   &__list-wrapper {
     margin: 3rem 0;
   }
+
   &__list-title {
     margin-bottom: 1rem;
     font-weight: bold;
@@ -486,6 +603,58 @@ export default {
       background-color: $purple-color;
     }
   }
+
+  &__upload {
+    width: 100%;
+    margin: 3rem 0;
+
+    &--button {
+      color: $yellow-color;
+      border: 1px dashed $yellow-color;
+      width: 100%;
+      text-align: center;
+      border-radius: 4px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      font-weight: bold;
+
+      &:hover {
+        background-color: $yellow-color;
+        color: #fff;
+      }
+
+      &:active {
+        background-color: darken($yellow-color, 5%);
+        color: #fff;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &--help {
+      color: $yellow-color;
+      width: 100%;
+      padding: 8px 0px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        color: darken($yellow-color, 7%);
+      }
+
+      &:active {
+        color: darken($yellow-color, 7%);
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
 }
 
 .wizard__controls {
@@ -503,6 +672,32 @@ export default {
   &--back {
     width: 100%;
     display: block;
+  }
+}
+
+.help {
+
+  &__link {
+    color: $yellow-color;
+    text-align: center;
+    width: 100%;
+    padding: 8px 0px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      color: darken($yellow-color, 7%);
+    }
+
+    &:active {
+      color: darken($yellow-color, 7%);
+    }
+
+    &:focus {
+      outline: none;
+    }
+  
   }
 }
 

@@ -28,6 +28,10 @@
 @import 'partials/form';
 @import 'partials/table';
 
+
+@import 'vendor/mathlive';
+@import 'vendor/mathlive.core';
+
 body {
   font-family: 'vazir';
   text-align: right;
