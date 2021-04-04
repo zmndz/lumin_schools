@@ -157,10 +157,127 @@
           <div class="teacher__upload">
             <div class="row">
               <div class="col-12">
-                <div class="teacher__upload--button">
+                <div class="teacher__upload--button" @click="openUploadDialog()">
                   + آپلود سوالات
                 </div>
               </div>
+              <b-form-file
+                id="js-uploadQuestion"
+                class="teacher__upload--question"
+                plain accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf,application/pdf"
+                v-model="questionFile"
+                @change="setFile($event)"
+              >
+              </b-form-file>
+
+              <b-modal id="upload-modal" ref="upload-modal" size="xl">
+                <template #modal-header="{}">
+                  <h5>آپلود سوالات</h5>
+                </template>
+
+                <div class="modal__content">
+                  <div class="row">
+                    <div class="col-6 col-md-4 col-lg-3">
+                      <div>
+                        تصحیح اتوماتیک
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-8 col-lg-9">
+                      <b-form-group v-slot="{ ariaDescribedby }">
+                        <b-form-radio-group
+                          id="btn-radios-1"
+                          v-model="examTypeSelected"
+                          :options="examTypeOptions"
+                          :aria-describedby="ariaDescribedby"
+                          name="radios-btn-default"
+                        ></b-form-radio-group>
+                      </b-form-group>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6 col-md-4 col-lg-3">
+                      <div>
+                        نمره سوالات تشریحی:
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-8 col-lg-9">
+                      <b-form-group id="input-group-1" label-for="input-1">
+                        <b-form-input
+                          id="input-1"
+                          placeholder="نمره سوالات تشریحی را وارد کنید"
+                          class="form__input"
+                          :class="{'form__input--invalid' : isFirstNameEmpty === true}"
+                          v-model="firstName"
+                          @input="validateFirstName()"
+                        ></b-form-input>
+                        <span v-if="isFirstNameEmpty === true" class="form__input--invalid-message">
+                          لطفا نام دانش آموز را وارد کنید
+                        </span>
+                      </b-form-group>
+                    </div>
+                    <div class="col-12">
+                      <div class="modal__question-preview">
+                        <div class="modal__question-preview-title">
+                          پیش نمایش سوالات
+                        </div>
+                        <div class="mb-4">
+                          <div>
+                          1- گزینه درست را انتخاب کنید
+                          </div>
+                          <div class="pr-3">
+                            <div>
+                              الف) گزینه اول
+                              <b-badge variant="success">گزینه صحیح</b-badge>
+                            </div>
+                            <div>
+                              ب) گزینه دوم
+                            </div>
+                            <div class="border border-danger rounded">
+                              ج) گزینه سوم
+                            </div>
+                            <div>
+                              د) گزینه چهارم
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="mb-4">
+                          <div>
+                          2- گزینه درست را انتخاب کنید
+                          </div>
+                          <div class="pr-3">
+                            <div>
+                              الف) گزینه اول
+                            </div>
+                            <div>
+                              ب) گزینه دوم
+                            </div>
+                            <div class="border border-success rounded">
+                              ج) گزینه سوم
+                              <b-badge variant="success">گزینه صحیح</b-badge>
+                            </div>
+                            <div>
+                              د) گزینه چهارم
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <template #modal-footer="{ ok, cancel }">
+                  <div class="modal__footer">
+                    <b-button variant="success" @click="ok()">
+                      تایید
+                    </b-button>
+                    <b-button variant="outline-danger" @click="cancel()">
+                      انصراف
+                    </b-button>
+                  </div>
+                </template>
+              </b-modal>
+
               <div class="col-12">
                 <div v-b-modal.help-modal class="teacher__upload--help">
                   راهنمای آپلود سوالات
@@ -255,9 +372,9 @@
 
               <template #modal-footer="{ ok }">
                 <!-- Emulate built in modal footer ok and cancel button actions -->
-                <b-button size="sm" variant="warning" @click="ok()">
+                <div class="button button--yellow" @click="ok()">
                   بستن
-                </b-button>
+                </div>
               </template>
             </b-modal>
           </div>
@@ -293,6 +410,12 @@ export default {
       //   smartMode: false,
       //   virtualKeyboardMode: "manual",
       // },
+      examTypeSelected: '1',
+      examTypeOptions: [
+        { text: 'بله', value: '1' },
+        { text: 'خیر', value: '0' },
+      ],
+      questionFile: null,
       examDate: '',
       examStartTime: '',
       examEndTime: '',
@@ -453,6 +576,19 @@ export default {
   methods: {
     ...mapActions([
     ]),
+    showHelpModal() {
+      this.$refs['upload-modal'].show();
+    },
+    async setFile(event) {
+      let file = event.target.files[0];
+      console.log(file)
+      this.showHelpModal();
+      // let result = await this.uploadQuestionFile({testID: this.examList[index].testID, testFile: file})
+      // if (result) {
+        // this.setCurrentExamPreview({questions: result.questions, nameFile: result.lessonTitle, testID: this.examList[index].testID, index: index}, true, false);
+        // this.updateExamList({index: index, isActive: true, nameFile: file.name, questions: result.questions, isPdf: false, pdfUrl: null,});
+      // }
+    },
     async onOptionClick({ option, addTag }) {
       await addTag(option)
       this.search = ''
@@ -533,9 +669,14 @@ export default {
     input : function() {
       console.log(this.formula)
     },
+    openUploadDialog() {
+      let studentFileUploader = document.getElementById('js-uploadQuestion');
+      studentFileUploader.click();
+    },
   },
   async mounted() {
     // MathLive.renderMathInDocument();
+    this.showHelpModal();
   }
 }
 </script>
@@ -654,9 +795,39 @@ export default {
         outline: none;
       }
     }
+
+    &--question {
+      display: none;
+    }
   }
 }
 
+.modal {
+
+  &__content {
+    // display: flex;
+
+    // &-title {
+    //   margin-left: 2rem;
+    // }
+  }
+
+  &__question-preview {
+
+    &-title {
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+}
 .wizard__controls {
   display: flex;
   justify-content: space-between;

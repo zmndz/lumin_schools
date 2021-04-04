@@ -1,15 +1,20 @@
 <template>
   <div class="teacher">
-    <div class="teacher__statics-wrapper">
-      <div class="teacher__statics--toolbar">
-        <button class="button button--yellow">
-          + آزمون جدید
-        </button>
+    <div class="teacher__section">
+      <div class="teacher__statics-wrapper">
+        <div class="teacher__statics--toolbar">
+          <button class="button button--yellow">
+            + آزمون جدید
+          </button>
+          <button class="button button--purple mr-3">
+            لیست درس ها
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div class="exams">
-      <SingleExam :examList="examList" />
+      <div class="exams">
+        <SingleExam :examList="examList" />
+      </div>
     </div>
     
   </div>
@@ -110,6 +115,10 @@ export default {
 @import './assets/scss/partials/variables.scss';
 
 .teacher {
+
+  &__section {
+    margin-bottom: 3rem;
+  }
 
   &__statics {
       display: flex;

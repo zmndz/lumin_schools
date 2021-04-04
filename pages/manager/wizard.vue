@@ -23,7 +23,7 @@
             <b-form-file
               id="js-uploadRegistration"
               class="upload-registration__upload"
-              plain accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf,application/pdf"
+              plain accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
               v-model="studentFile"
               @change="setFile($event)"
             >
