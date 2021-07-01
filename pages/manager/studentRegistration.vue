@@ -5,7 +5,7 @@
     </div>
     <div class="row">
       <div class="col-12 col-lg-5">
-        <b-form @submit="addStudent" class="student__form">
+        <b-form @submit="insertStudent" class="student__form">
           <b-form-group id="input-group-1" label="نام:" label-for="input-1">
             <b-form-input
               id="input-1"
@@ -63,9 +63,24 @@
             </span>
           </b-form-group>
 
-          <b-form-group id="input-group-5" label="کلاس:" label-for="input-5">
-            <b-form-select
+          <b-form-group id="input-group-5" label="شماره موبایل:" label-for="input-5">
+            <b-form-input
               id="input-5"
+              type="number"
+              placeholder="شماره موبایل دانش آموز را وارد کنید"
+              class="form__input"
+              :class="{'form__input--invalid' : isPhoneNumberInvalid === true}"
+              v-model="phoneNumber"
+              @input="validatePhoneNumber()"
+            ></b-form-input>
+            <span v-if="isPhoneNumberInvalid === true" class="form__input--invalid-message">
+              لطفا شماره موبایل صحیح وارد کنید
+            </span>
+          </b-form-group>
+
+          <b-form-group id="input-group-6" label="کلاس:" label-for="input-6">
+            <b-form-select
+              id="input-6"
               class="form__select"
               :class="{'form__select--invalid': isClassEmpty}"
               v-model="selectedClass"
@@ -85,60 +100,17 @@
       </div>
     </div>
 
-    <div class="student__list-wrapper">
-      <div class="student__list-title">
-        لیست دانش آموز ها
-      </div>
-      <div class="student__list tbl">
-        <div class="student__list--header tbl-header">
-          <div class="student__list--select tbl-cell">
-            <input type="checkbox" name="" id="">
-          </div>
-          <div class="student__list--firstname tbl-cell ">
-            نام
-          </div>
-          <div class="student__list--lastname tbl-cell">
-            نام خانوادگی
-          </div>
-          <div class="student__list--nationalcode tbl-cell">
-            کد ملی
-          </div>
-          <div class="student__list--nationalcode tbl-cell">
-            نام پدر
-          </div>
-          <div class="student__list--edit tbl-cell">
-            ویرایش
-          </div>
-          <div class="student__list--remove tbl-cell">
-            حذف
-          </div>
-        </div>
-        <div v-for="(student, index) in addedStudents" :key="index" class="tbl-row">
-          <div class="student__list--select tbl-cell">
-            <input type="checkbox" name="" :id="index">
-          </div>
-          <div class="student__list--firstname tbl-cell ">
-            {{student.firstName}}
-          </div>
-          <div class="student__list--lastname tbl-cell">
-            {{student.lastName}}
-          </div>
-          <div class="student__list--nationalcode tbl-cell">
-            {{student.nationalCode}}
-          </div>
-          <div class="student__list--nationalcode tbl-cell">
-            {{student.fatherName}}
-          </div>
-          <div class="student__list--edit tbl-cell">
-            <div>E</div>
-          </div>
-          <div class="student__list--remove tbl-cell">
-            <div>X</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <Table 
+      v-if="addedStudents !== null" 
+      :data="addedStudents" 
+      title="لیست دانش آموزان"
+      @removeRow="deleteStudent" 
+      
+    />
+      <!-- @editRow="editStudentRow" 
+      @cancelEditRow="cancelEditClass" 
+      @saveRow="updateClass"  -->
+    
     <div class="wizard__controls">
       <button class="wizard__controls--next button button--yellow">تمام</button>
       <button class="wizard__controls--back button button--yellow">بازگشت</button>
@@ -149,36 +121,28 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import Steps from '~/components/common/Steps'
+import Table from '~/components/common/Table'
 
 export default {
   layout: 'managerLayout',
   components: {
     Steps,
+    Table,
   },
   data() {
     return {
       firstName: '',
       lastName: '',
       nationalCode: '',
+      phoneNumber: '',
       fatherName: '',
       isFirstNameEmpty: null,
       isLastNameEmpty: null,
       isNationalCodeEmpty: null,
+      isPhoneNumberInvalid: null,
       isFatherNameEmpty: null,
       isClassEmpty: null,
-      // classList: ['7/1', '7/2', '7/3', '8/1', '8/2', '8/3', '9/1', '9/2', '9/3'],
-      classList: [
-        { value: null, text: 'کلاس دانش آموز را انتخاب کنید' },
-        { value: '71', text: '7/1' },
-        { value: '72', text: '7/2' },
-        { value: '73', text: '7/3' },
-        { value: '81', text: '8/1' },
-        { value: '82', text: '8/2' },
-        { value: '83', text: '8/3' },
-        { value: '91', text: '9/1' },
-        { value: '92', text: '9/2' },
-        { value: '93', text: '9/3' },
-      ],
+      classList: [],
       search: '',
       selectedClass: null,
       stepsData: [
@@ -198,78 +162,21 @@ export default {
           active: true,
         },
       ],
-      addedStudents: [
-        {
-          id: '1',
-          firstName: 'ظهیر',
-          lastName: 'دژبرد',
-          fatherName: 'محمد', 
-          nationalCode: '3810260657',
-        },
-        {
-          id: '2',
-          firstName: 'کیوان',
-          lastName: 'صمدی',
-          fatherName: 'محمد', 
-          nationalCode: '3721236589',
-        },
-        {
-          id: '3',
-          firstName: 'احمد',
-          lastName: 'دژبرد',
-          fatherName: 'محمد', 
-          nationalCode: '3712345649',
-        },
-        {
-          id: '4',
-          firstName: 'سینا',
-          lastName: 'فاتحی',
-          fatherName: 'محمد', 
-          nationalCode: '3523651247',
-        },
-        {
-          id: '5',
-          firstName: 'ظهیر',
-          lastName: 'دژبرد',
-          fatherName: 'محمد', 
-          nationalCode: '3810260657',
-        },
-        {
-          id: '6',
-          firstName: 'کیوان',
-          lastName: 'صمدی',
-          fatherName: 'محمد', 
-          nationalCode: '3721236589',
-        },
-        {
-          id: '7',
-          firstName: 'احمد',
-          lastName: 'دژبرد',
-          fatherName: 'محمد', 
-          nationalCode: '3712345649',
-        },
-        {
-          id: '8',
-          firstName: 'سینا',
-          lastName: 'فاتحی',
-          fatherName: 'محمد', 
-          nationalCode: '3523651247',
-        },
-      ],
+      addedStudents: null,
     }
   },
   computed: {
     ...mapGetters([
-
+      'getAllStudents',
+      'getAllStudentCourses',
     ]),
   },
   methods: {
     ...mapActions([
+      'studentsList',
+      'createStudent',
+      'removeStudent',
     ]),
-    addStudent (e) {
-      e.preventDefault()
-      this.validateStudent();
-    },
     validateFirstName() {
       if (this.firstName == '') {
         this.isFirstNameEmpty = true;
@@ -306,6 +213,31 @@ export default {
         return true;
       }
     },
+    validatePhoneNumber() {
+      let regex = new RegExp('09(1[0-9]|3[1-9]|2[1-9])-?[0-9]{3}-?[0-9]{4}');
+      let isPhone = regex.test(this.phoneNumber);
+      if (this.phoneNumber == '') {
+        this.isPhoneNumberInvalid = false;
+        return true;
+      } else {
+        if (isPhone && this.phoneNumber.length == 11) {
+          this.isPhoneNumberInvalid = false;
+          return true;
+        } else {
+          this.isPhoneNumberInvalid = true;
+          return false;
+        }
+      }
+    },
+    validateNationalCode() {
+      if (this.nationalCode == '' || this.nationalCode.length !== 10) {
+        this.isNationalCodeEmpty = true;
+        return false;
+      } else {
+        this.isNationalCodeEmpty = false;
+        return true;
+      }
+    },
     validateClass() {
       if (this.selectedClass == null) {
         this.isClassEmpty = true;
@@ -320,17 +252,64 @@ export default {
       let checkLastName = this.validateLastName();
       let checkFatherName = this.validateFatherName();
       let checkNationalCode = this.validateNationalCode();
+      let checkPhoneNumber = this.validatePhoneNumber();
       let checkClass = this.validateClass();
 
-      if (checkFirstName && checkLastName && checkNationalCode && checkFatherName && checkClass) {
+      if (checkFirstName && checkLastName && checkNationalCode && checkPhoneNumber && checkFatherName && checkClass) {
         return true;
       } else {
         return false;
       }
-    }
-  },
-  async mounted() {
+    },
+    async getStudentsData() {
+      let result = await this.studentsList();
+      if (result) {
+        this.addedStudents = this.getAllStudents;
+        this.classList = this.getAllStudentCourses;
+      }
+    },
+    async insertStudent(e) {
+      e.preventDefault()
+      if (!this.validateStudent()) {
+        return false;
+      }
+      console.log("this.selectedClass", this.selectedClass)
+      let params = {
+        name: this.firstName,
+        family: this.lastName,
+        national_code: this.nationalCode,
+        // father_name: this.fatherName,
+        mobile: this.phoneNumber,
+        class_id: this.selectedClass.classId,
+        title: this.selectedClass.title,
+        base: this.selectedClass.base,
+      }
+      console.log("params", params)
+      let result = await this.createStudent(params);
+      if (result) {
+        this.resetForm();
+      }
+    },
+    async deleteStudent(row, index) {
+      console.log("remove", row, index)
+      let result = await this.removeStudent({roleId: row.role_id, index});
+      if (result) {
+        console.log("deleteClass success")
+      }
+    },
 
+
+    resetForm() {
+      this.firstName = '';
+      this.lastName = '';
+      this.nationalCode = '';
+      this.fatherName = '';
+      this.phoneNumber = '';
+      this.selectedClass = null;
+    },
+  },
+  mounted() {
+    this.getStudentsData();
   }
 }
 </script>
@@ -344,53 +323,6 @@ export default {
     width: 100%;
   }
 
-  &__list-wrapper {
-    margin: 3rem 0;
-  }
-  &__list-title {
-    margin-bottom: 1rem;
-    font-weight: bold;
-  }
-
-  &__list {
-
-    &--header {
-      // background-color: darkgrey;
-    }
-
-    &--select {
-      min-width: 42px;
-      width: 46px;
-      justify-content: center;
-    }
-
-    &--firstname {
-      min-width: 120px;
-      width: 100%;
-    }
-
-    &--lastname {
-      min-width: 160px;
-      width: 100%;
-    }
-
-    &--nationalcode {
-      min-width: 120px;
-      width: 100%;
-    }
-
-    &--edit {
-      min-width: 80px;
-      width: 80px;
-      justify-content: center;
-    }
-
-    &--remove {
-      min-width: 80px;
-      justify-content: center;
-      width: 80px;
-    }
-  }
 
   &__select {
     padding: 0;

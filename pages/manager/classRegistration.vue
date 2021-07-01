@@ -6,22 +6,7 @@
     <div class="row">
       <div class="col-12 col-lg-5">
         <b-form @submit="addClass" class="class__form">
-          <b-form-group id="input-group-1" label="پایه تحصیلی:" label-for="input-1">
-            <b-form-select
-              id="input-1"
-              class="form__select"
-              :class="{'form__select--invalid': isGradeEmpty}"
-              v-model="selectedGrade"
-              :options="grades"
-              @input="validateGrade()"
-            >
-            </b-form-select>
-            <span v-if="isGradeEmpty === true" class="form__select--invalid-message">
-              لطفا یکی از پایه های تحصیلی را انتخاب کنید
-            </span>
-          </b-form-group>
-
-          <b-form-group id="input-group-2" label="نام کلاس:" label-for="input-2">
+          <b-form-group id="input-group-2" label="نام کلاس را وارد کنید" label-for="input-2">
             <b-form-input
               id="input-2"
               placeholder="برای مثال ۷/۱ یا ۹/۳"
@@ -35,55 +20,36 @@
             </span>
           </b-form-group>
           
-          <button type="submit" class="button button--yellow button--block">
+          <b-form-group id="input-group-1" label="پایه تحصیلی را وارد کنید:" label-for="input-1">
+            <b-form-input
+              id="input-1"
+              placeholder="برای مثال هفتم یا نهم"
+              class="form__input"
+              :class="{'form__input--invalid' : isGradeEmpty === true}"
+              v-model="gradeName"
+              @input="validateGrade()"
+            ></b-form-input>
+            <span v-if="isGradeEmpty === true" class="form__select--invalid-message">
+              لطفا یکی از پایه های تحصیلی را انتخاب کنید
+            </span>
+          </b-form-group>
+          <button type="submit" @click="insertClass" class="button button--yellow button--block">
             اضافه کردن کلاس
           </button>
         </b-form>
       </div>
     </div>
 
-    <div class="class__list-wrapper">
-      <div class="class__list-title">
-        لیست کلاس ها
-      </div>
-      <div class="class__list tbl">
-        <div class="class__list--header tbl-header">
-          <div class="class__list--select tbl-cell">
-            <input type="checkbox" name="" id="">
-          </div>
-          <div class="class__list--classname tbl-cell ">
-            نام کلاس
-          </div>
-          <div class="class__list--grade tbl-cell">
-            پایه
-          </div>
-          <div class="class__list--edit tbl-cell">
-            ویرایش
-          </div>
-          <div class="class__list--remove tbl-cell">
-            حذف
-          </div>
-        </div>
-        <div v-for="(singleClass, index) in addedClasses" :key="index" class="tbl-row">
-          <div class="class__list--select tbl-cell">
-            <input type="checkbox" name="" :id="index">
-          </div>
-          <div class="class__list--classname tbl-cell ">
-            {{singleClass.className}}
-          </div>
-          <div class="class__list--grade tbl-cell">
-            {{singleClass.gradeTitle}}
-          </div>
-          <div class="class__list--edit tbl-cell">
-            <div>E</div>
-          </div>
-          <div class="class__list--remove tbl-cell">
-            <div>X</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <Table 
+      v-if="addedClasses !== null" 
+      :data="addedClasses" 
+      title="لیست کلاس ها" 
+      @editRow="editClassRow" 
+      @cancelEditRow="cancelEditClass" 
+      @saveRow="updateClass" 
+      @removeRow="deleteClass" 
+    />
+    
     <div class="wizard__controls">
       <button class="wizard__controls--next button button--yellow">گام بعدی: ثبت کردن معلم ها</button>
       <button class="wizard__controls--back button button--yellow" @click="goToManager()">بازگشت</button>
@@ -94,24 +60,20 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import Steps from '~/components/common/Steps'
+import Table from '~/components/common/Table'
 
 export default {
   layout: 'managerLayout',
   components: {
     Steps,
+    Table,
   },
   data() {
     return {
       className: '',
-      selectedGrade: null,
+      gradeName: '',
       isGradeEmpty: null,
       isClassNameEmpty: null,
-      grades: [
-        { value: null, text: 'پایه تحصیلی مورد نظر را انتخاب کنید' },
-        { value: '7', text: 'متوسطه اول' },
-        { value: '8', text: 'متوسطه دوم' },
-        { value: '9', text: 'متوسطه سوم' },
-      ],
       stepsData: [
         {
           id: '1',
@@ -129,51 +91,23 @@ export default {
           active: false,
         },
       ],
-      addedClasses: [
-        {
-          id: '1',
-          gradeId: '7',
-          gradeTitle: 'متوسطه اول',
-          className: '۷/۱',
-          classId: '71'
-        },
-        {
-          id: '2',
-          gradeId: '8',
-          gradeTitle: 'متوسطه دوم',
-          className: '۸/۲',
-          classId: '82'
-        },
-        {
-          id: '3',
-          gradeId: '9',
-          gradeTitle: 'متوسطه سوم',
-          className: '۹/۱',
-          classId: '91'
-        },
-        {
-          id: '4',
-          gradeId: '9',
-          gradeTitle: 'متوسطه سوم',
-          className: '۹/۲',
-          classId: '92'
-        },
-        {
-          id: '4',
-          gradeId: '94',
-          gradeTitle: 'متوسطه سوم',
-          className: '۹/۴',
-        },
-      ],
+      addedClasses: null,
     }
   },
   computed: {
     ...mapGetters([
-
+      'getAllClasses',
     ]),
   },
   methods: {
     ...mapActions([
+      'classesList',
+      'createClass',
+      'insertNewClass',
+      'updateClassRow',
+      'editClass',
+      'cancelUpdateClassRow',
+      'removeClass',
     ]),
     goToManager() {
       this.$router.push('/manager');
@@ -183,7 +117,7 @@ export default {
       this.validateClass();
     },
     validateGrade() {
-      if (this.selectedGrade == null) {
+      if (this.gradeName == '') {
         this.isGradeEmpty = true;
         return false;
       } else {
@@ -205,16 +139,62 @@ export default {
       let checkClassName = this.validateClassName();
 
       if (checkGrade && checkClassName) {
-      console.log("yes")
         return true;
       } else {
-      console.log("no")
         return false;
       }
-    }
-  },
-  async mounted() {
+    },
+    resetForm() {
+      this.gradeName = '';
+      this.className = '';
+    },
+    async getClassesData() {
+      let result = await this.classesList();
+      if (result) {
+        this.addedClasses = this.getAllClasses;
+        console.log("this.addedClasses created", this.addedClasses);
+      }
+    },
+    async insertClass() {
+      if (!this.validateClass()) {
+        return false;
+      }
+      let result = await this.createClass({className: this.className, gradeName: this.gradeName});
+      if (result.isSuccess) {
+        let insertedClass = {
+          base: this.gradeName,
+          class_id: result.classId,
+          title: this.className,
+        }
+        this.insertNewClass(insertedClass);
+        this.resetForm();
+      }
+    },
+    async editClassRow(row, index) {
+      this.cancelUpdateClassRow({index});
+      this.updateClassRow({index});
+    },
+    async cancelEditClass(index) {
+      this.cancelUpdateClassRow({index});
+    },
+    async updateClass(inputData, index) {
+      let result = await this.editClass({inputData, index});
+      if (result.isSuccess) {
+        console.log("updateClass success")
+      }
+    },
+    async deleteClass(row, index) {
+      console.log("remove", row, index)
+      console.log("addedClasses", this.addedClasses)
 
+      let result = await this.removeClass({classId: row.class_id, index});
+      if (result.isSuccess) {
+        console.log("deleteClass success")
+      }
+    },
+  },
+  mounted() {
+    this.getClassesData();
   }
 }
 </script>

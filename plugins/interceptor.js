@@ -11,7 +11,7 @@ export default function(ctx) {
         
         let adminLogin = JSON.parse(localStorage.getItem('adminLogin'));
         let adminVerify = JSON.parse(localStorage.getItem('adminVerify'));
-        let adminLoginToken = adminLogin ? adminLogin.loginToken : null;
+        let adminLoginToken = adminLogin ? adminLogin.token : null;
         let adminVerifyToken = adminVerify ? adminVerify.verifyToken : null;
 
         config.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';

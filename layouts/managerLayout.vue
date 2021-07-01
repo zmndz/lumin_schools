@@ -1,13 +1,13 @@
 <template>
   <div class="admin-page">
     <div class="admin__navbar">
-      <a href="/admin" class="logo__wrapper">
+      <a href="/manager" class="logo__wrapper">
         <img class="logo" src="~/assets/images/logo.svg" alt="">
       </a>
       <b-dropdown variant="link" menu-class="admin__name-menu" toggle-class="admin__name-wrapper">
         <template #button-content>
           <div class="admin__name">
-            نام مدرسه
+            {{scopeName}}
           </div>
         </template>
         <!-- <b-dropdown-item href="#" v-b-modal.modal-archive>آرشیو</b-dropdown-item> -->
@@ -34,27 +34,29 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   data() {
     return {
-
+      scopeName: null,
     }
   },
   computed: {
     ...mapGetters([
-
+      'getAdminScopeName',
     ])
   },
   methods: {
     ...mapActions([
-
+      'logoutAdmin',
+      'loadAllAdminData',
     ]),
     logout() {
-
+      this.logoutAdmin();
+      this.$router.push('/admin');
     },
   },
   async mounted() {
-
+    this.scopeName = this.getAdminScopeName;
   },
   async created() {
-
+    this.loadAllAdminData();
   }
 }
 </script>

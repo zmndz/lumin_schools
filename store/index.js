@@ -1,10 +1,10 @@
-import adminAuth from './modules/admin-auth.store';
-import studentAuth from './modules/student-auth.store';
+import admin from './modules/admin';
+// import adminStudents from './modules/admin/students.store';
 
 
 export default ({
   modules: {
-    adminAuth,
-    studentAuth,
+    admin,
+    // adminStudents,
   }
 })

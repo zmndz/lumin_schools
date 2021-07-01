@@ -1,7 +1,7 @@
 <template>
   <div class="manager">
     <div class="manager__statics-wrapper">
-      <div class="manager__students">
+      <div class="manager__students" @click="goToStudents">
         <div class="manager__students--details">
           <div class="manager__students--label">
             دانش آموزان
@@ -11,7 +11,7 @@
           </div>
         </div>
       </div>
-      <div class="manager__teachers">
+      <div class="manager__teachers" @click="goToTeachers">
         <div class="manager__teachers--details">
           <div class="manager__teachers--label">
             معلم ها
@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="manager__classes">
+      <div class="manager__classes" @click="goToClasses">
         <div class="manager__classes--details">
           <div class="manager__classes--label">
             کلاس ها
@@ -197,8 +197,14 @@ export default {
   methods: {
     ...mapActions([
     ]),
-    goToNewClassRegistration() {
+    goToClasses() {
       this.$router.push('/manager/classRegistration');
+    },
+    goToTeachers() {
+      this.$router.push('/manager/teacherRegistration');
+    },
+    goToStudents() {
+      this.$router.push('/manager/studentRegistration');
     },
   },
   async mounted() {
@@ -235,22 +241,22 @@ export default {
     width: 100%;
     height: 100px;
     background-color: #fff;
-    box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    // box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     margin-bottom: 32px;
-    border-radius: 4px;
+    border-radius: 16px;
     color: #fff;
     font-weight: bold;
-    background-color: lighten($yellow-color, 15%);
+    background-color: lighten($yellow-color, 38%);
     cursor: pointer;
 
     &--number {
-      color: #d89c00;
+      color: #8f6805;
       font-size: 16px;
       text-align: center;
     }
 
     &--label {
-      color: #d89c00;
+      color: #8f6805;
       font-size: 18px;
       margin-bottom: 8px;
     }
@@ -270,22 +276,22 @@ export default {
     width: 100%;
     height: 100px;
     background-color: #fff;
-    box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    // box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     margin-bottom: 32px;
-    border-radius: 4px;
+    border-radius: 16px;
     color: #fff;
     font-weight: bold;
-    background-color: lighten($purple-color, 15%);
+    background-color: lighten($purple-color, 38%);
     cursor: pointer;
 
     &--number {
-      color: #9a00d6;
+      color: #6e1492;
       font-size: 16px;
       text-align: center;
     }
 
     &--label {
-      color: #9a00d6;
+      color: #6e1492;
       font-size: 18px;
       margin-bottom: 8px;
     }
@@ -305,21 +311,21 @@ export default {
     width: 100%;
     height: 100px;
     background-color: #fff;
-    box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border-radius: 4px;
+    // box-shadow: 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 16px;
     color: #fff;
     font-weight: bold;
-    background-color: lighten($blue-color, 15%);
+    background-color: lighten($blue-color, 38%);
     cursor: pointer;
 
     &--number {
-      color: #0077de;
+      color: #0a5392;
       font-size: 16px;
       text-align: center;
     }
 
     &--label {
-      color: #0077de;
+      color: #0a5392;
       font-size: 18px;
       margin-bottom: 8px;
     }

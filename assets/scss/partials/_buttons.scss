@@ -60,6 +60,26 @@
       background-color: darken($purple-color, 7%);
     }
   }
+  &--red {
+    background-color: $red-color;
+
+    &:hover {
+      background-color: darken($red-color, 5%);
+    }
+    &:active {
+      background-color: darken($red-color, 7%);
+    }
+  }
+  &--gray {
+    background-color: $gray-color;
+
+    &:hover {
+      background-color: darken($gray-color, 5%);
+    }
+    &:active {
+      background-color: darken($gray-color, 7%);
+    }
+  }
 
   &--outline--yellow {
     background-color: #fff;
@@ -81,7 +101,7 @@
   &--outline--green {
     background-color: #fff;
     color: $green-color;
-    border: 1px solid;
+    border: 1px solid $green-color;
     transition: all 0.2s ease-in-out;
 
     &:hover {
@@ -96,7 +116,7 @@
   &--outline--blue {
     background-color: #fff;
     color: $blue-color;
-    border: 1px solid;
+    border: 1px solid $blue-color;
     transition: all 0.2s ease-in-out;
 
     &:hover {
@@ -111,7 +131,7 @@
   &--outline--purple {
     background-color: #fff;
     color: $purple-color;
-    border: 1px solid;
+    border: 1px solid $purple-color;
     transition: all 0.2s ease-in-out;
 
     &:hover {
@@ -123,10 +143,40 @@
       color: #fff;
     }
   }
+  &--outline--red {
+    background-color: #fff;
+    color: $red-color;
+    border: 1px solid $red-color;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: $red-color;
+      color: #fff;
+    }
+    &:active {
+      background-color: darken($red-color, 5%);
+      color: #fff;
+    }
+  }
+  &--outline--gray {
+    background-color: #fff;
+    color: $gray-color;
+    border: 1px solid $gray-color;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: $gray-color;
+      color: #fff;
+    }
+    &:active {
+      background-color: darken($gray-color, 5%);
+      color: #fff;
+    }
+  }
 
   &--small {
     padding: 4px 8px;
-    font-size: 0.875rem;
+    font-size: 12px;
   }
   &--medium {
   }

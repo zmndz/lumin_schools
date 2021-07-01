@@ -125,53 +125,7 @@
       </div>
     </div>
 
-    <div class="teacher__list-wrapper">
-      <div class="teacher__list-title">
-        لیست معلم ها
-      </div>
-      <div class="teacher__list tbl">
-        <div class="teacher__list--header tbl-header">
-          <div class="teacher__list--select tbl-cell">
-            <input type="checkbox" name="" id="">
-          </div>
-          <div class="teacher__list--firstname tbl-cell ">
-            نام
-          </div>
-          <div class="teacher__list--lastname tbl-cell">
-            نام خانوادگی
-          </div>
-          <div class="teacher__list--nationalcode tbl-cell">
-            کد ملی
-          </div>
-          <div class="teacher__list--edit tbl-cell">
-            ویرایش
-          </div>
-          <div class="teacher__list--remove tbl-cell">
-            حذف
-          </div>
-        </div>
-        <div v-for="(teacher, index) in addedTeachers" :key="index" class="tbl-row">
-          <div class="teacher__list--select tbl-cell">
-            <input type="checkbox" name="" :id="index">
-          </div>
-          <div class="teacher__list--firstname tbl-cell ">
-            {{teacher.firstName}}
-          </div>
-          <div class="teacher__list--lastname tbl-cell">
-            {{teacher.lastName}}
-          </div>
-          <div class="teacher__list--nationalcode tbl-cell">
-            {{teacher.nationalCode}}
-          </div>
-          <div class="teacher__list--edit tbl-cell">
-            <div>E</div>
-          </div>
-          <div class="teacher__list--remove tbl-cell">
-            <div>X</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Table v-if="addedTeachers !== null" :data="addedTeachers" title="لیست معلم ها" />
 
     <div class="wizard__controls">
       <button class="wizard__controls--next button button--yellow">گام بعدی: ثبت دانش آموزان</button>
@@ -183,11 +137,13 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import Steps from '~/components/common/Steps'
+import Table from '~/components/common/Table'
 
 export default {
   layout: 'managerLayout',
   components: {
     Steps,
+    Table,
   },
   data() {
     return {
@@ -217,61 +173,12 @@ export default {
           active: false,
         },
       ],
-      addedTeachers: [
-        {
-          id: '1',
-          firstName: 'ظهیر',
-          lastName: 'دژبرد',
-          nationalCode: '3810260657',
-        },
-        {
-          id: '2',
-          firstName: 'کیوان',
-          lastName: 'صمدی',
-          nationalCode: '3721236589',
-        },
-        {
-          id: '3',
-          firstName: 'احمد',
-          lastName: 'دژبرد',
-          nationalCode: '3712345649',
-        },
-        {
-          id: '4',
-          firstName: 'سینا',
-          lastName: 'فاتحی',
-          nationalCode: '3523651247',
-        },
-        {
-          id: '5',
-          firstName: 'ظهیر',
-          lastName: 'دژبرد',
-          nationalCode: '3810260657',
-        },
-        {
-          id: '6',
-          firstName: 'کیوان',
-          lastName: 'صمدی',
-          nationalCode: '3721236589',
-        },
-        {
-          id: '7',
-          firstName: 'احمد',
-          lastName: 'دژبرد',
-          nationalCode: '3712345649',
-        },
-        {
-          id: '8',
-          firstName: 'سینا',
-          lastName: 'فاتحی',
-          nationalCode: '3523651247',
-        },
-      ],
+      addedTeachers: null,
     }
   },
   computed: {
     ...mapGetters([
-
+      'getAllTeachers',
     ]),
     criteria() {
       // Compute the search criteria
@@ -297,6 +204,7 @@ export default {
   },
   methods: {
     ...mapActions([
+      'teachersList',
     ]),
     async onOptionClick({ option, addTag }) {
       await addTag(option)
@@ -348,10 +256,16 @@ export default {
       } else {
         return false;
       }
-    }
+    },
+    async getTeachersData() {
+      let result = await this.teachersList();
+      if (result) {
+        this.addedTeachers = this.getAllTeachers;
+      }
+    },
   },
-  async mounted() {
-
+  mounted() {
+    this.getTeachersData();
   }
 }
 </script>
@@ -396,6 +310,11 @@ export default {
     }
 
     &--nationalcode {
+      min-width: 120px;
+      width: 100%;
+    }
+
+    &--classes {
       min-width: 120px;
       width: 100%;
     }
